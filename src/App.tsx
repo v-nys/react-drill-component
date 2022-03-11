@@ -1,4 +1,3 @@
-import { json } from 'stream/consumers';
 import './App.css';
 import { Drill } from './Drill';
 const _ = require('lodash');
