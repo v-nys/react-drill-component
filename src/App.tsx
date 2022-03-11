@@ -1,3 +1,4 @@
+import { json } from 'stream/consumers';
 import './App.css';
 import { Drill } from './Drill';
 const _ = require('lodash');
@@ -12,7 +13,7 @@ interface RandomChordDrillInput {
   chordType: ChordType
 }
 
-// TODO: kan ik unie omzetten naar lijst?
+// TODO: kan ik union type omzetten naar lijst van mogelijke waarden?
 const rootStrings: StringNumber[] = _.range(5, 6);
 const tonics: Note[] = ['A', 'A♯', 'A♭'];
 const chordTypes: ChordType[] = ["major", "minor"];
@@ -28,7 +29,7 @@ function App() {
     <>
       <Drill
         data={chordConfigurations}
-        questionRenderer={(question) => <></>}
+        questionRenderer={(question) => <p>{JSON.stringify(question)}</p>}
         answerRenderer={(question) => <p>Test!</p>}
         initialQuestionTime={5000}
         initialAnswerTime={5000}

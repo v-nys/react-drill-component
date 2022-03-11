@@ -14,8 +14,7 @@ export function Drill<DrillInput>(props: DrillProps<DrillInput>) {
     const [questionTime, setQuestionTime] = useState(props.initialQuestionTime);
     const [answerTime, setAnswerTime] = useState(props.initialAnswerTime);
     const [showingQuestion, setShowingQuestion] = useState(true);
-    const [questionData, setQuestionData] = useState(props.data[Math.floor(Math.random() * DataTransfer.length)]);
-
+    const [questionData, setQuestionData] = useState(props.data[Math.floor(Math.random() * props.data.length)]);
     const timer = useRef(setTimeout(() => {
     }, questionTime));
     useEffect(
@@ -32,7 +31,7 @@ export function Drill<DrillInput>(props: DrillProps<DrillInput>) {
             if (!showingQuestion) {
                 clearTimeout(timer.current);
                 timer.current = setTimeout(() => {
-                    setQuestionData(props.data[Math.floor(Math.random() * DataTransfer.length)]);
+                    setQuestionData(props.data[Math.floor(Math.random() * props.data.length)]);
                     setShowingQuestion(true);
                 }, answerTime);
             }
@@ -46,7 +45,7 @@ export function Drill<DrillInput>(props: DrillProps<DrillInput>) {
             }
             else {
                 timer.current = setTimeout(() => {
-                    setQuestionData(props.data[Math.floor(Math.random() * DataTransfer.length)]);
+                    setQuestionData(props.data[Math.floor(Math.random() * props.data.length)]);
                     setShowingQuestion(true);
                 }, answerTime);
             }
@@ -67,8 +66,6 @@ export function Drill<DrillInput>(props: DrillProps<DrillInput>) {
             value={answerTime}
             max={props.maxSliderValue}
             onChange={(event) => setAnswerTime(parseInt(event.target.value))} /></label>
-        <p>{ showingQuestion ? JSON.stringify(questionData) : props.answerRenderer(questionData)}</p>
-        <button>Pauzeren</button>
-        <button>Doorgaan naar de volgende vraag (wanneer gepauzeerd)</button>
+        { showingQuestion ? props.questionRenderer(questionData) : props.answerRenderer(questionData)}
     </>);
 }
