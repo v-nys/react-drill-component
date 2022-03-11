@@ -5,7 +5,9 @@ export interface DrillProps<DrillInput> {
     questionRenderer: (input: DrillInput) => ReactElement,
     answerRenderer: (input: DrillInput) => ReactElement,
     initialQuestionTime: number,
-    initialAnswerTime: number
+    initialAnswerTime: number,
+    minSliderValue: number,
+    maxSliderValue: number
 }
 
 export function Drill<DrillInput>(props: DrillProps<DrillInput>) {
@@ -54,18 +56,18 @@ export function Drill<DrillInput>(props: DrillProps<DrillInput>) {
         <label>Denktijd:
             <input
             type="range"
-            min={1000}
+            min={props.minSliderValue}
             value={questionTime}
-            max={20000}
+            max={props.maxSliderValue}
             onChange={(event) => setQuestionTime(parseInt(event.target.value))} /></label>
         <label>Tijd om antwoord te tonen:
             <input
             type="range"
-            min={1000}
+            min={props.minSliderValue}
             value={answerTime}
-            max={20000}
+            max={props.maxSliderValue}
             onChange={(event) => setAnswerTime(parseInt(event.target.value))} /></label>
-        <p>{ showingQuestion ? JSON.stringify(questionData) : "hier het antwoord"}</p>
+        <p>{ showingQuestion ? JSON.stringify(questionData) : props.answerRenderer(questionData)}</p>
         <button>Pauzeren</button>
         <button>Doorgaan naar de volgende vraag (wanneer gepauzeerd)</button>
     </>);

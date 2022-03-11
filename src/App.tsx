@@ -14,13 +14,14 @@ interface RandomChordDrillInput {
 
 // TODO: kan ik unie omzetten naar lijst?
 const rootStrings: StringNumber[] = _.range(5, 6);
-const tonics : Note[] = ['A', 'A♯', 'A♭'];
-const chordTypes : ChordType[] = ["major", "minor"];
-const chordConfigurations : RandomChordDrillInput[] = rootStrings.flatMap(
+const tonics: Note[] = ['A', 'A♯', 'A♭'];
+const chordTypes: ChordType[] = ["major", "minor"];
+const chordConfigurations: RandomChordDrillInput[] = rootStrings.flatMap(
   (rootString) => tonics.flatMap(
     (tonic) => chordTypes.map(
       (chordType) => {
-        return { rootString, tonic, chordType } })));
+        return { rootString, tonic, chordType }
+      })));
 
 function App() {
   return (
@@ -28,9 +29,12 @@ function App() {
       <Drill
         data={chordConfigurations}
         questionRenderer={(question) => <></>}
-        answerRenderer={(question) => <></>}
+        answerRenderer={(question) => <p>Test!</p>}
         initialQuestionTime={5000}
-        initialAnswerTime={5000} />
+        initialAnswerTime={5000}
+        minSliderValue={1000}
+        maxSliderValue={20000}
+      />
     </>
   );
 }
