@@ -1,4 +1,3 @@
-import { json } from 'stream/consumers';
 import './App.css';
 import { Drill } from './Drill';
 const _ = require('lodash');
@@ -28,7 +27,7 @@ function App() {
   return (
     <>
       <Drill
-        data={chordConfigurations}
+        questionProducer={() => chordConfigurations[Math.floor(Math.random() * chordConfigurations.length)]}
         questionRenderer={(question) => <p>{JSON.stringify(question)}</p>}
         answerRenderer={(question) => <p>Test!</p>}
         initialQuestionTime={5000}

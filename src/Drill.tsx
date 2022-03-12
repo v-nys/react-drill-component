@@ -1,7 +1,7 @@
 import { ReactElement, useEffect, useRef, useState } from "react"
 
 export interface DrillProps<DrillInput> {
-    data: DrillInput[],
+    questionProducer: () => DrillInput,
     questionRenderer: (input: DrillInput) => ReactElement,
     answerRenderer: (input: DrillInput) => ReactElement,
     initialQuestionTime: number,
@@ -14,7 +14,7 @@ export function Drill<DrillInput>(props: DrillProps<DrillInput>) {
     const [questionTime, setQuestionTime] = useState(props.initialQuestionTime);
     const [answerTime, setAnswerTime] = useState(props.initialAnswerTime);
     const [showingQuestion, setShowingQuestion] = useState(true);
-    const [questionData, setQuestionData] = useState(props.data[Math.floor(Math.random() * props.data.length)]);
+    const [questionData, setQuestionData] = useState(props.questionProducer());
     const timer = useRef(setTimeout(() => {
     }, questionTime));
     useEffect(
@@ -31,7 +31,7 @@ export function Drill<DrillInput>(props: DrillProps<DrillInput>) {
             if (!showingQuestion) {
                 clearTimeout(timer.current);
                 timer.current = setTimeout(() => {
-                    setQuestionData(props.data[Math.floor(Math.random() * props.data.length)]);
+                    setQuestionData(props.questionProducer());
                     setShowingQuestion(true);
                 }, answerTime);
             }
@@ -45,7 +45,7 @@ export function Drill<DrillInput>(props: DrillProps<DrillInput>) {
             }
             else {
                 timer.current = setTimeout(() => {
-                    setQuestionData(props.data[Math.floor(Math.random() * props.data.length)]);
+                    setQuestionData(props.questionProducer());
                     setShowingQuestion(true);
                 }, answerTime);
             }
