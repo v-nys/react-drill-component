@@ -11,10 +11,11 @@ export interface DrillProps<DrillInput> {
 }
 
 export function Drill<DrillInput>(props: DrillProps<DrillInput>) {
+    const questionProducer = props.questionProducer;
     const [questionTime, setQuestionTime] = useState(props.initialQuestionTime);
     const [answerTime, setAnswerTime] = useState(props.initialAnswerTime);
     const [showingQuestion, setShowingQuestion] = useState(true);
-    const [questionData, setQuestionData] = useState(props.questionProducer());
+    const [questionData, setQuestionData] = useState(questionProducer());
     const timer = useRef(setTimeout(() => {
     }, questionTime));
     useEffect(
@@ -31,7 +32,7 @@ export function Drill<DrillInput>(props: DrillProps<DrillInput>) {
             if (!showingQuestion) {
                 clearTimeout(timer.current);
                 timer.current = setTimeout(() => {
-                    setQuestionData(props.questionProducer());
+                    setQuestionData(questionProducer());
                     setShowingQuestion(true);
                 }, answerTime);
             }
@@ -45,7 +46,7 @@ export function Drill<DrillInput>(props: DrillProps<DrillInput>) {
             }
             else {
                 timer.current = setTimeout(() => {
-                    setQuestionData(props.questionProducer());
+                    setQuestionData(questionProducer());
                     setShowingQuestion(true);
                 }, answerTime);
             }
