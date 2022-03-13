@@ -36,12 +36,10 @@ function ChordDrillConfigurationForm(props: { config: ChordDrillConfiguration })
   const [tonics, setTonics] = useState([...possibleTonics]);
   const [chordTypes, setChordTypes] = useState([...possibleChordTypes]);
   useEffect(() => {
-    console.log("stellen opnieuw in...")
     props.config.rootStrings = rootStrings;
     props.config.tonics = tonics;
     props.config.chordTypes = chordTypes;
   });
-  // TODO: moet state nog gebruiken en instellen, anders zal het niet werken...
   return (
     <>
       <Select
@@ -71,9 +69,7 @@ function App() {
   } as ChordDrillConfiguration;
   function producer() {
     let question = chordConfigurations[Math.floor(Math.random() * chordConfigurations.length)];
-    while (!(config.chordTypes.includes(question.chordType)) ||
-      !(config.rootStrings.includes(question.rootString)) ||
-      !(config.chordTypes.includes(question.chordType))) {
+    while (!(config.chordTypes.includes(question.chordType) && config.rootStrings.includes(question.rootString) && config.tonics.includes(question.tonic))) {
       question = chordConfigurations[Math.floor(Math.random() * chordConfigurations.length)];
     }
     return question;
