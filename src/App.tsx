@@ -1,6 +1,7 @@
 import './App.css';
 import Select from 'react-select';
 import { Drill } from './Drill';
+import { useEffect, useState } from 'react';
 const _ = require('lodash');
 
 type StringNumber = 2 | 3 | 4 | 5 | 6;
@@ -16,50 +17,72 @@ interface RandomChordDrillInput {
 interface ChordDrillConfiguration {
   rootStrings: StringNumber[],
   tonics: Note[],
-  chordTypes: []
+  chordTypes: ChordType[]
 }
 
-// hoe configuratie mogelijk maken?
-// maak er ook component voor, bv. ChordDrillConfigurationForm
-// de state hiervan moet uiteindelijk toegankelijk zijn voor de questionProducer functie...
-// kan gewoon volledige state ervan in app zetten en dan naar beneden passeren?
-// nadeel: drill zal rerenderen zodra iets wijzigt
-// dus beter ref?
-
 // TODO: kan ik union type omzetten naar lijst van mogelijke waarden?
-const rootStrings: StringNumber[] = _.range(5, 7);
-const tonics: Note[] = ['A', 'A♯', 'A♭'];
-const chordTypes: ChordType[] = ["major", "minor"];
-const chordConfigurations: RandomChordDrillInput[] = rootStrings.flatMap(
-  (rootString) => tonics.flatMap(
-    (tonic) => chordTypes.map(
+const possibleRootStrings: StringNumber[] = _.range(5, 7);
+const possibleTonics: Note[] = ['A', 'A♯', 'A♭'];
+const possibleChordTypes: ChordType[] = ["major", "minor"];
+const chordConfigurations: RandomChordDrillInput[] = possibleRootStrings.flatMap(
+  (rootString) => possibleTonics.flatMap(
+    (tonic) => possibleChordTypes.map(
       (chordType) => {
         return { rootString, tonic, chordType }
       })));
 
-function ChordDrillConfigurationForm() {
+function ChordDrillConfigurationForm(props: { config: ChordDrillConfiguration }) {
+  const [rootStrings, setRootStrings] = useState([...possibleRootStrings]);
+  const [tonics, setTonics] = useState([...possibleTonics]);
+  const [chordTypes, setChordTypes] = useState([...possibleChordTypes]);
+  useEffect(() => {
+    console.log("stellen opnieuw in...")
+    props.config.rootStrings = rootStrings;
+    props.config.tonics = tonics;
+    props.config.chordTypes = chordTypes;
+  });
+  // TODO: moet state nog gebruiken en instellen, anders zal het niet werken...
   return (
     <>
-      <Select options={rootStrings.map((n) => { return {value: n, label: n} })} isMulti></Select>
-      <Select options={tonics.map((t) => { return {value: t, label: t} })} isMulti></Select>
-      <Select options={chordTypes.map((ct) => { return {value: ct, label: ct} })} isMulti></Select>
+      <Select
+        value={rootStrings.map((n) => { return { value: n, label: n } })}
+        options={possibleRootStrings.map((n) => { return { value: n, label: n } })}
+        onChange={(multiValue) => setRootStrings(multiValue.map(({value}) => value))}
+        isMulti />
+      <Select
+        value={tonics.map((t) => { return { value: t, label: t } })}
+        options={possibleTonics.map((t) => { return { value: t, label: t } })}
+        onChange={(multiValue) => setTonics(multiValue.map(({value}) => value))}
+        isMulti />
+      <Select
+        value={chordTypes.map((ct) => { return { value: ct, label: ct } })}
+        options={possibleChordTypes.map((ct) => { return { value: ct, label: ct } })}
+        onChange={(multiValue) => setChordTypes(multiValue.map(({value}) => value))}
+        isMulti />
     </>
   )
 }
 
 function App() {
-  /* wat kan ik hier doen?
-   * ik wil dat de questionProducer de ingestelde values van ChordDrillConfigurationForm gebruikt
-   * optie om de state in App te zetten en te laten wijzigen in ChordDrillConfigurationForm?
-   * maar dat zorgt dan voor een rerender van het geheel
-   * en de drill switcht meteen
-   */
-  
+  const config = {
+    rootStrings: [...possibleRootStrings],
+    tonics: [...possibleTonics],
+    chordTypes: [...possibleChordTypes]
+  } as ChordDrillConfiguration;
+  function producer() {
+    let question = chordConfigurations[Math.floor(Math.random() * chordConfigurations.length)];
+    while (!(config.chordTypes.includes(question.chordType)) ||
+      !(config.rootStrings.includes(question.rootString)) ||
+      !(config.chordTypes.includes(question.chordType))) {
+      question = chordConfigurations[Math.floor(Math.random() * chordConfigurations.length)];
+    }
+    return question;
+  }
   return (
     <>
-      <ChordDrillConfigurationForm />
       <Drill
-        questionProducer={() => chordConfigurations[Math.floor(Math.random() * chordConfigurations.length)]}
+        configurationForm={<ChordDrillConfigurationForm config={config} />}
+        questionProducer={producer}
         questionRenderer={(question) => <p>{JSON.stringify(question)}</p>}
         answerRenderer={(question) => <p>Test!</p>}
         initialQuestionTime={5000}

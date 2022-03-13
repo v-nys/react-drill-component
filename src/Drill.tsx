@@ -7,7 +7,8 @@ export interface DrillProps<DrillInput> {
     initialQuestionTime: number,
     initialAnswerTime: number,
     minSliderValue: number,
-    maxSliderValue: number
+    maxSliderValue: number,
+    configurationForm?: ReactElement
 }
 
 export function Drill<DrillInput>(props: DrillProps<DrillInput>) {
@@ -56,6 +57,7 @@ export function Drill<DrillInput>(props: DrillProps<DrillInput>) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [showingQuestion]);
     return (<>
+        {props.configurationForm}
         <label>Denktijd:
             <input
             type="range"
