@@ -25,6 +25,7 @@ export function Drill<DrillInput>(props: DrillProps<DrillInput>) {
                 timer.current = setTimeout(() => setShowingQuestion(false), questionTime);
             }
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [questionTime]
     );
     useEffect(
@@ -37,6 +38,7 @@ export function Drill<DrillInput>(props: DrillProps<DrillInput>) {
                 }, answerTime);
             }
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [answerTime]
     );
     useEffect(
@@ -51,6 +53,7 @@ export function Drill<DrillInput>(props: DrillProps<DrillInput>) {
                 }, answerTime);
             }
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [showingQuestion]);
     return (<>
         <label>Denktijd:
