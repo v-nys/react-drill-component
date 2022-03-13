@@ -2,6 +2,7 @@ import './App.css';
 import Select from 'react-select';
 import { Drill } from './Drill';
 import { useEffect, useState } from 'react';
+import GuitarChord from 'react-guitar-chords';
 
 const possibleRootStrings = [2, 3, 4, 5, 6] as const;
 const possibleTonics = ['A♭', 'A', 'A♯', 'B♭', 'B', 'C', 'C♯', 'D♭', 'D', 'D♯', 'E♭', 'E', 'F', 'F♯', 'G♭', 'G', 'G♯'] as const;
@@ -44,20 +45,33 @@ function ChordDrillConfigurationForm(props: { config: ChordDrillConfiguration })
       <Select
         value={rootStrings.map((n) => { return { value: n, label: n } })}
         options={possibleRootStrings.map((n) => { return { value: n, label: n } })}
-        onChange={(multiValue) => setRootStrings(multiValue.map(({value}) => value))}
+        onChange={(multiValue) => setRootStrings(multiValue.map(({ value }) => value))}
         isMulti />
       <Select
         value={tonics.map((t) => { return { value: t, label: t } })}
         options={possibleTonics.map((t) => { return { value: t, label: t } })}
-        onChange={(multiValue) => setTonics(multiValue.map(({value}) => value))}
+        onChange={(multiValue) => setTonics(multiValue.map(({ value }) => value))}
         isMulti />
       <Select
         value={chordTypes.map((ct) => { return { value: ct, label: ct } })}
         options={possibleChordTypes.map((ct) => { return { value: ct, label: ct } })}
-        onChange={(multiValue) => setChordTypes(multiValue.map(({value}) => value))}
+        onChange={(multiValue) => setChordTypes(multiValue.map(({ value }) => value))}
         isMulti />
     </>
   )
+}
+
+function chordForm({ rootString, tonic, chordType }: RandomChordDrillInput) {
+  switch (rootString) {
+    case 6:
+      switch (chordType) {
+        case "major":
+          return <GuitarChord frets={[1, 1, 2, 3, 3, 1]} />
+          break;
+      }
+      break;
+  }
+  return <p>Test!</p>
 }
 
 function App() {
@@ -78,8 +92,13 @@ function App() {
       <Drill
         configurationForm={<ChordDrillConfigurationForm config={config} />}
         questionProducer={producer}
-        questionRenderer={(question) => <p>{JSON.stringify(question)}</p>}
-        answerRenderer={(question) => <p>Test!</p>}
+        questionRenderer={(question) =>
+          <ul>
+            <li>root string: {question.rootString}</li>
+            <li>tonica: {question.tonic}</li>
+            <li>akkoordtype: {question.chordType}</li>
+          </ul>}
+        answerRenderer={chordForm}
         initialQuestionTime={5000}
         initialAnswerTime={5000}
         minSliderValue={1000}
