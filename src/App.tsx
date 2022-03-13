@@ -2,11 +2,14 @@ import './App.css';
 import Select from 'react-select';
 import { Drill } from './Drill';
 import { useEffect, useState } from 'react';
-const _ = require('lodash');
 
-type StringNumber = 2 | 3 | 4 | 5 | 6;
-type Note = 'A' | 'A♯' | 'A♭' | 'B';
-type ChordType = 'major' | 'minor';
+const possibleRootStrings = [2, 3, 4, 5, 6] as const;
+const possibleTonics = ['A♭', 'A', 'A♯', 'B♭', 'B', 'C', 'C♯', 'D♭', 'D', 'D♯', 'E♭', 'E', 'F', 'F♯', 'G♭', 'G', 'G♯'] as const;
+const possibleChordTypes = ["major", "minor", "dominant 7", "major 7", "minor 7"] as const;
+
+type StringNumber = typeof possibleRootStrings[number];
+type Note = typeof possibleTonics[number];
+type ChordType = typeof possibleChordTypes[number];
 
 interface RandomChordDrillInput {
   rootString: StringNumber,
@@ -20,10 +23,6 @@ interface ChordDrillConfiguration {
   chordTypes: ChordType[]
 }
 
-// TODO: kan ik union type omzetten naar lijst van mogelijke waarden?
-const possibleRootStrings: StringNumber[] = _.range(5, 7);
-const possibleTonics: Note[] = ['A', 'A♯', 'A♭'];
-const possibleChordTypes: ChordType[] = ["major", "minor"];
 const chordConfigurations: RandomChordDrillInput[] = possibleRootStrings.flatMap(
   (rootString) => possibleTonics.flatMap(
     (tonic) => possibleChordTypes.map(
