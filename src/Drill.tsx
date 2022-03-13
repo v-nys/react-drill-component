@@ -1,20 +1,22 @@
 import { ReactElement, useEffect, useRef, useState } from "react"
 
 export interface DrillProps<DrillInput> {
-    data: DrillInput[],
+    questionProducer: () => DrillInput,
     questionRenderer: (input: DrillInput) => ReactElement,
     answerRenderer: (input: DrillInput) => ReactElement,
     initialQuestionTime: number,
     initialAnswerTime: number,
     minSliderValue: number,
-    maxSliderValue: number
+    maxSliderValue: number,
+    configurationForm?: ReactElement
 }
 
 export function Drill<DrillInput>(props: DrillProps<DrillInput>) {
+    const questionProducer = props.questionProducer;
     const [questionTime, setQuestionTime] = useState(props.initialQuestionTime);
     const [answerTime, setAnswerTime] = useState(props.initialAnswerTime);
     const [showingQuestion, setShowingQuestion] = useState(true);
-    const [questionData, setQuestionData] = useState(props.data[Math.floor(Math.random() * props.data.length)]);
+    const [questionData, setQuestionData] = useState(questionProducer());
     const timer = useRef(setTimeout(() => {
     }, questionTime));
     useEffect(
@@ -24,6 +26,7 @@ export function Drill<DrillInput>(props: DrillProps<DrillInput>) {
                 timer.current = setTimeout(() => setShowingQuestion(false), questionTime);
             }
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [questionTime]
     );
     useEffect(
@@ -31,11 +34,12 @@ export function Drill<DrillInput>(props: DrillProps<DrillInput>) {
             if (!showingQuestion) {
                 clearTimeout(timer.current);
                 timer.current = setTimeout(() => {
-                    setQuestionData(props.data[Math.floor(Math.random() * props.data.length)]);
+                    setQuestionData(questionProducer());
                     setShowingQuestion(true);
                 }, answerTime);
             }
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [answerTime]
     );
     useEffect(
@@ -45,13 +49,15 @@ export function Drill<DrillInput>(props: DrillProps<DrillInput>) {
             }
             else {
                 timer.current = setTimeout(() => {
-                    setQuestionData(props.data[Math.floor(Math.random() * props.data.length)]);
+                    setQuestionData(questionProducer());
                     setShowingQuestion(true);
                 }, answerTime);
             }
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [showingQuestion]);
     return (<>
+        {props.configurationForm}
         <label>Denktijd:
             <input
             type="range"
