@@ -1,6 +1,6 @@
 import './App.css';
 import Select from 'react-select';
-import { Drill } from './Drill';
+import { Drill } from './Components/Drill';
 import { useEffect, useState } from 'react';
 import GuitarChord from 'react-guitar-chords';
 
