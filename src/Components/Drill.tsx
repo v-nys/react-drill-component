@@ -72,6 +72,6 @@ export function Drill<DrillInput>(props: DrillProps<DrillInput>) {
             value={answerTime}
             max={props.maxSliderValue}
             onChange={(event) => setAnswerTime(parseInt(event.target.value))} /></label>
-        { showingQuestion ? props.questionRenderer(questionData) : props.answerRenderer(questionData)}
+        { showingQuestion ? props.questionRenderer(questionData) : <>{props.questionRenderer(questionData)}{props.answerRenderer(questionData)}</>}
     </>);
 }
